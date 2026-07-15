@@ -12,8 +12,6 @@ namespace hello_world.Models
         public string PhoneNumber { get; private set; } = string.Empty;
         public string FullName => $"{FirstName} {LastName}";
 
-        //private readonly List<TodoEntity> _todos = new();
-        //public IReadOnlyCollection<TodoEntity> Todos => _todos.AsReadOnly();
 
         public PersonEntity(string code, string firstName, string lastName, string email, string phoneNumber)
         {
