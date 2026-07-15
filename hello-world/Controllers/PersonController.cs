@@ -1,8 +1,9 @@
 
+using hello_world.Data;
+using hello_world.DTOs;
+using hello_world.Models;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-using hello_world.Models;
-using hello_world.Data;
 
 public class PersonController : Controller
 {
@@ -48,15 +49,22 @@ public class PersonController : Controller
     // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
     [HttpPost]
     [ValidateAntiForgeryToken]
-    public async Task<IActionResult> Create([Bind("Id,Code,FirstName,LastName,Email,PhoneNumber,FullName")] PersonEntity personentity)
+    public async Task<IActionResult> Create(CreatePersonDto dto)
     {
         if (ModelState.IsValid)
         {
-            _context.Add(personentity);
+            var personEntity = new PersonEntity(
+                dto.Code,
+                dto.FirstName,
+                dto.LastName,
+                dto.Email,
+                dto.PhoneNumber
+            );
+            _context.Add(personEntity);
             await _context.SaveChangesAsync();
             return RedirectToAction(nameof(Index));
         }
-        return View(personentity);
+        return View(dto);
     }
 
     // GET: PERSONENTITYS/Edit/5
@@ -80,9 +88,9 @@ public class PersonController : Controller
     // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
     [HttpPost]
     [ValidateAntiForgeryToken]
-    public async Task<IActionResult> Edit(System.Guid? id, [Bind("Id,Code,FirstName,LastName,Email,PhoneNumber,FullName")] PersonEntity personentity)
+    public async Task<IActionResult> Edit(System.Guid? id, UpdatePersonDto dto)
     {
-        if (id != personentity.Id)
+        if (id != dto.Id)
         {
             return NotFound();
         }
@@ -91,12 +99,18 @@ public class PersonController : Controller
         {
             try
             {
-                _context.Update(personentity);
+                var person = await _context.Persons.FirstOrDefaultAsync(x => x.Id == dto.Id);
+                if (person == null)
+                {
+                    throw new InvalidOperationException($"No exsite la persona");
+                }
+                person.UpdatePersonEntity(dto.FirstName, dto.LastName, dto.Email, dto.PhoneNumber);
+                _context.Update(person);
                 await _context.SaveChangesAsync();
             }
             catch (DbUpdateConcurrencyException)
             {
-                if (!PersonEntityExists(personentity.Id))
+                if (!PersonEntityExists(dto.Id))
                 {
                     return NotFound();
                 }
@@ -107,7 +121,7 @@ public class PersonController : Controller
             }
             return RedirectToAction(nameof(Index));
         }
-        return View(personentity);
+        return View(dto);
     }
 
     // GET: PERSONENTITYS/Delete/5

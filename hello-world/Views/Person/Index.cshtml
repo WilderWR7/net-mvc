@@ -4,62 +4,90 @@
     ViewData["Title"] = "Index";
 }
 
-<h1>Index</h1>
+<div class="container mt-4 mb-5">
 
-<p>
-    <a asp-action="Create">Create New</a>
-</p>
-<table class="table">
-    <thead>
-        <tr>
-            <th>
-                @Html.DisplayNameFor(model => model.Code)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.FirstName)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.LastName)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Email)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.PhoneNumber)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.FullName)
-            </th>
-            <th></th>
-        </tr>
-    </thead>
-    <tbody>
-@foreach (var item in Model) {
-        <tr>
-            <td>
-                @Html.DisplayFor(model => item.Code)
-            </td>
-            <td>
-                @Html.DisplayFor(model => item.FirstName)
-            </td>
-            <td>
-                @Html.DisplayFor(model => item.LastName)
-            </td>
-            <td>
-                @Html.DisplayFor(model => item.Email)
-            </td>
-            <td>
-                @Html.DisplayFor(model => item.PhoneNumber)
-            </td>
-            <td>
-                @Html.DisplayFor(model => item.FullName)
-            </td>
-            <td>
-                <a asp-action="Edit" asp-route-id="@item.Id">Edit</a> |
-                <a asp-action="Details" asp-route-id="@item.Id">Details</a> |
-                <a asp-action="Delete" asp-route-id="@item.Id">Delete</a>
-            </td>
-        </tr>
-}
-    </tbody>
-</table>
+    <!-- Tarjeta principal que envuelve la lista -->
+    <div class="card shadow-sm border-0 rounded-3">
+
+        <!-- Cabecera flexbox para alinear el título a la izquierda y el botón a la derecha -->
+        <div class="card-header bg-primary text-white d-flex justify-content-between align-items-center py-3 rounded-top">
+            <h2 class="mb-0 fs-4">Person List</h2>
+            <a asp-action="Create" class="btn btn-light btn-sm fw-bold text-primary shadow-sm">
+                + Create New
+            </a>
+        </div>
+
+        <!-- table-responsive asegura que haya scroll horizontal en pantallas pequeñas -->
+        <div class="table-responsive">
+            <table class="table table-hover align-middle mb-0">
+                <thead class="table-light border-bottom">
+                    <tr>
+                        <th class="px-4 py-3 text-secondary fw-semibold">
+                            @Html.DisplayNameFor(model => model.Code)
+                        </th>
+                        <th class="py-3 text-secondary fw-semibold">
+                            @Html.DisplayNameFor(model => model.FirstName)
+                        </th>
+                        <th class="py-3 text-secondary fw-semibold">
+                            @Html.DisplayNameFor(model => model.LastName)
+                        </th>
+                        <th class="py-3 text-secondary fw-semibold">
+                            @Html.DisplayNameFor(model => model.Email)
+                        </th>
+                        <th class="py-3 text-secondary fw-semibold">
+                            @Html.DisplayNameFor(model => model.PhoneNumber)
+                        </th>
+                        <th class="py-3 text-secondary fw-semibold">
+                            @Html.DisplayNameFor(model => model.FullName)
+                        </th>
+                        <th class="px-4 py-3 text-center text-secondary fw-semibold">
+                            Actions
+                        </th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var item in Model)
+                    {
+                        <tr>
+                            <td class="px-4 fw-medium">
+                                @Html.DisplayFor(model => item.Code)
+                            </td>
+                            <td>
+                                @Html.DisplayFor(model => item.FirstName)
+                            </td>
+                            <td>
+                                @Html.DisplayFor(model => item.LastName)
+                            </td>
+                            <td>
+                                @Html.DisplayFor(model => item.Email)
+                            </td>
+                            <td>
+                                @Html.DisplayFor(model => item.PhoneNumber)
+                            </td>
+                            <td>
+                                @Html.DisplayFor(model => item.FullName)
+                            </td>
+                            <td class="px-4 text-center">
+                                <!-- Grupo de botones pequeños para las acciones -->
+                                <div class="btn-group shadow-sm" role="group" aria-label="Actions">
+                                    <a asp-action="Edit" asp-route-id="@item.Id" class="btn btn-sm btn-outline-primary">Edit</a>
+                                    <a asp-action="Details" asp-route-id="@item.Id" class="btn btn-sm btn-outline-info">Details</a>
+                                    <a asp-action="Delete" asp-route-id="@item.Id" class="btn btn-sm btn-outline-danger">Delete</a>
+                                </div>
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+
+        <!-- Mensaje de estado vacío en caso de que no haya registros en la base de datos -->
+        @if (!Model.Any())
+        {
+            <div class="card-body text-center py-5 text-muted">
+                <p class="mb-0 fs-5">No records found.</p>
+                <small>Click "+ Create New" to add a person.</small>
+            </div>
+        }
+    </div>
+</div>
